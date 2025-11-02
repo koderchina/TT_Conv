@@ -21,6 +21,30 @@ wire datar_rdy;
 // Counter for number of read features
 reg [2:0] read_feature_cnt;
 
+// ============ control Unit FSM ============
+parameter FSM_SIZE = 2;
+parameter INIT = 2'b01, READ = 2'b10;
+reg [FSM_SIZE-1:0] curr_state;
+reg [FSM_SIZE-1:0] next_state;
+
+always @(state, line_cnt, read_feature_cnt)
+begin
+next_state = 2'b00;
+case (curr_state)
+    IDLE: begin
+        if (line_cnt >= 21)
+        begin
+            datar_rdy = 1'b1;
+            next_state = READ;
+        end
+    end
+    READ: begin
+    end
+endcase
+
+end
+// ============ end control Unit FSM ============
+
 // ============ write controller ============
 always @(posedge clk)
 begin
